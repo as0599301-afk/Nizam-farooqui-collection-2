@@ -5,6 +5,7 @@ import com.example.audio.engine.AudioDuckingEngine
 import com.example.audio.engine.NfcMusicPlayer
 import com.example.audio.engine.VoicePlaybackPlayer
 import com.example.audio.importer.AudioFileImporter
+import com.example.audio.importer.BundledMp3Seeder
 import com.example.audio.mic.LiveMicEngine
 import com.example.audio.provider.MusicProviderRegistry
 import com.example.audio.recording.VoiceRecordingManager
@@ -34,6 +35,7 @@ class NfcApplication : Application() {
             try {
                 val settings = repository.getDuckingSettingsSync()
                 duckingEngine.updateSettings(settings)
+                BundledMp3Seeder.seed(this@NfcApplication, repository)
             } catch (e: Exception) {
                 e.printStackTrace()
             }

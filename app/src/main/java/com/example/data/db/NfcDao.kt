@@ -29,6 +29,8 @@ interface NfcDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertSong(song: SongItem): Long
+    @Query("SELECT * FROM songs WHERE uriString = :uri LIMIT 1")
+    suspend fun getSongByUri(uri: String): SongItem?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertSongs(songs: List<SongItem>)

@@ -22,6 +22,7 @@ class NfcRepository(
     val duckingSettings: Flow<DuckingSettings?> = nfcDao.getDuckingSettings()
 
     suspend fun insertSong(song: SongItem): Long = nfcDao.insertSong(song)
+    suspend fun getSongByUri(uri: String): SongItem? = nfcDao.getSongByUri(uri)
 
     suspend fun updateSong(song: SongItem) = nfcDao.updateSong(song)
 
