@@ -26,7 +26,7 @@ import kotlinx.coroutines.launch
 
 enum class NfcScreen(val title: String, val shortLabel: String) {
     MUSIC_PLAYER("Music Player", "Player"),
-    ONLINE_SEARCH("Online Search", "Search"),
+    YOUTUBE("YouTube", "YouTube"),
     LOCAL_LIBRARY("Local MP3 Library", "Library"),
     LIVE_MIC("Live Microphone", "Live Mic"),
     VOICE_EFFECTS("Voice Effects", "Effects"),

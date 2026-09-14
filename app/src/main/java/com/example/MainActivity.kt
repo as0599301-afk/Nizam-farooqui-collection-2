@@ -28,7 +28,7 @@ import androidx.compose.material.icons.filled.LibraryMusic
 import androidx.compose.material.icons.filled.Mic
 import androidx.compose.material.icons.filled.PlayCircleFilled
 import androidx.compose.material.icons.filled.RecordVoiceOver
-import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.PlayCircleFilled
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
@@ -60,7 +60,7 @@ import com.example.ui.screens.DuckingSettingsScreen
 import com.example.ui.screens.LiveMicScreen
 import com.example.ui.screens.LocalLibraryScreen
 import com.example.ui.screens.MusicPlayerScreen
-import com.example.ui.screens.OnlineSearchScreen
+import com.example.ui.screens.YouTubeScreen
 import com.example.ui.screens.VoiceEffectsScreen
 import com.example.ui.screens.VoiceRecordingsScreen
 import com.example.ui.theme.MyApplicationTheme
@@ -116,7 +116,7 @@ fun NfcMainApp(
 
     val navItems = listOf(
         NavItem(NfcScreen.MUSIC_PLAYER, Icons.Default.PlayCircleFilled, "Player"),
-        NavItem(NfcScreen.ONLINE_SEARCH, Icons.Default.Search, "Search"),
+        NavItem(NfcScreen.YOUTUBE, Icons.Default.PlayCircleFilled, "YouTube"),
         NavItem(NfcScreen.LOCAL_LIBRARY, Icons.Default.LibraryMusic, "Library"),
         NavItem(NfcScreen.LIVE_MIC, Icons.Default.Mic, "Mic"),
         NavItem(NfcScreen.VOICE_EFFECTS, Icons.Default.AutoAwesome, "Effects"),
@@ -215,7 +215,7 @@ fun NfcMainApp(
             ) { targetScreen ->
                 when (targetScreen) {
                     NfcScreen.MUSIC_PLAYER -> MusicPlayerScreen(viewModel)
-                    NfcScreen.ONLINE_SEARCH -> OnlineSearchScreen(viewModel)
+                    NfcScreen.YOUTUBE -> YouTubeScreen(viewModel)
                     NfcScreen.LOCAL_LIBRARY -> LocalLibraryScreen(viewModel)
                     NfcScreen.LIVE_MIC -> LiveMicScreen(viewModel)
                     NfcScreen.VOICE_EFFECTS -> VoiceEffectsScreen(viewModel)

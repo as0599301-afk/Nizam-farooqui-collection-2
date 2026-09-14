@@ -10,10 +10,16 @@ plugins {
 }
 
 android {
+    buildFeatures {
+        buildConfig = true
+    }
+
+
   namespace = "com.example"
   compileSdk { version = release(36) { minorApiLevel = 1 } }
 
   defaultConfig {
+    buildConfigField("String", "YOUTUBE_API_KEY", "\"${project.findProperty("YOUTUBE_API_KEY") ?: "YOUR_YOUTUBE_API_KEY"}\"")
     applicationId = "com.aistudio.nfc.collection"
     minSdk = 24
     targetSdk = 36

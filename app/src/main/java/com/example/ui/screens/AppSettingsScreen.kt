@@ -190,62 +190,35 @@ fun AppSettingsScreen(
             modifier = Modifier.fillMaxWidth()
         ) {
             Column(modifier = Modifier.padding(14.dp)) {
-                // Provider 1: JioSaavn Legal Gateway
+                // YouTube Music
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
                         .clip(RoundedCornerShape(8.dp))
-                        .background(if (activeProvider.providerId == "jiosaavn") NfcSurfaceCard else Color.Transparent)
+                        .background(
+                            if (activeProvider.providerId == "youtube")
+                                NfcSurfaceCard
+                            else
+                                Color.Transparent
+                        )
                         .padding(10.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     RadioButton(
-                        selected = activeProvider.providerId == "jiosaavn",
-                        onClick = { viewModel.selectProvider("jiosaavn") },
+                        selected = activeProvider.providerId == "youtube",
+                        onClick = { viewModel.selectProvider("youtube") },
                         colors = RadioButtonDefaults.colors(selectedColor = NfcGold)
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                     Column(modifier = Modifier.weight(1f)) {
                         Text(
-                            text = "Indian Music Cloud (JioSaavn Legal Gateway)",
+                            text = "YouTube Music",
                             color = TextPrimary,
                             fontWeight = FontWeight.Bold,
                             fontSize = 13.sp
                         )
                         Text(
-                            text = "Broad legal catalogue for Hindi, Bhojpuri, Marathi, Punjabi, Tamil, and more.",
-                            color = TextSecondary,
-                            fontSize = 11.sp
-                        )
-                    }
-                }
-
-                Spacer(modifier = Modifier.height(6.dp))
-
-                // Provider 2: Jamendo Creative Commons
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clip(RoundedCornerShape(8.dp))
-                        .background(if (activeProvider.providerId == "jamendo") NfcSurfaceCard else Color.Transparent)
-                        .padding(10.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    RadioButton(
-                        selected = activeProvider.providerId == "jamendo",
-                        onClick = { viewModel.selectProvider("jamendo") },
-                        colors = RadioButtonDefaults.colors(selectedColor = NfcGold)
-                    )
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Column(modifier = Modifier.weight(1f)) {
-                        Text(
-                            text = "Jamendo Open Music (Creative Commons)",
-                            color = TextPrimary,
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 13.sp
-                        )
-                        Text(
-                            text = "Global licensed Creative Commons music library for independent artists.",
+                            text = "Search and play music through the official YouTube player.",
                             color = TextSecondary,
                             fontSize = 11.sp
                         )
