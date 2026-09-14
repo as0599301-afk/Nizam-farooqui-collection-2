@@ -3,7 +3,11 @@ name: Build Android APK
 on:
   workflow_dispatch:
   push:
-    branches: [ "main" ]
+    branches:
+      - "main"
+
+permissions:
+  contents: read
 
 jobs:
   build:
@@ -11,28 +15,30 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Set up JDK 21
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v6
         with:
           distribution: temurin
-          java-version: '21'
+          java-version: "21"
 
       - name: Set up Android SDK
-        uses: android-actions/setup-android@v3
+        uses: android-actions/setup-android@v4
         with:
-          accept-android-sdk-licenses: false
+          accept-android-sdk-licenses: true
 
-      - name: Install Android SDK
+      - name: Install Android SDK packages
         run: |
-          yes | sdkmanager --licenses >/dev/null
-          sdkmanager --install "platform-tools" "platforms;android-35" "build-tools;35.0.0"
+          sdkmanager --install \
+            "platform-tools" \
+            "platforms;android-35" \
+            "build-tools;35.0.0"
 
       - name: Set up Gradle
-        uses: gradle/actions/setup-gradle@v4
+        uses: gradle/actions/setup-gradle@v5
         with:
-          gradle-version: '9.7.1'
+          gradle-version: "9.7.1"
 
       - name: Generate debug keystore
         run: |
@@ -50,8 +56,8 @@ jobs:
         run: gradle assembleDebug --stacktrace
 
       - name: Upload APK
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: Nizam-Farooqui-Collection-4-APK
-          path: '**/build/outputs/apk/debug/*.apk'
+          path: "**/build/outputs/apk/debug/*.apk"
           if-no-files-found: error
