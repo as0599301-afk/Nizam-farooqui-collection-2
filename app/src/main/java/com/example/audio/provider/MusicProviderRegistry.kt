@@ -8,7 +8,7 @@ class MusicProviderRegistry {
 
     private val providers = mutableMapOf<String, MusicProvider>()
 
-    private val _activeProvider = MutableStateFlow<MusicProvider>(JioSaavnLegalMusicProvider())
+    private val _activeProvider = MutableStateFlow<MusicProvider>(JamendoLegalMusicProvider())
     val activeProvider: StateFlow<MusicProvider> = _activeProvider.asStateFlow()
 
     init {
@@ -16,7 +16,7 @@ class MusicProviderRegistry {
         val jamendo = JamendoLegalMusicProvider()
         registerProvider(saavn)
         registerProvider(jamendo)
-        _activeProvider.value = saavn
+        _activeProvider.value = jamendo
     }
 
     fun registerProvider(provider: MusicProvider) {
