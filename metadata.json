@@ -1,0 +1,6 @@
+{
+  "name": "Nizam Farooqui Collection",
+  "description": "NFC - Music Player with legal search, local MP3 library, live microphone with 5 voice effects, voice recording, and real-time audio ducking engine.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

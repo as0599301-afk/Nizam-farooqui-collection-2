@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<paths xmlns:android="http://schemas.android.com/apk/res/android">
+    <files-path name="nfc_recordings" path="nfc_recordings/" />
+    <files-path name="nfc_voice_mp3s" path="nfc_voice_mp3s/" />
+    <files-path name="nfc_music_library" path="nfc_music_library/" />
+    <external-files-path name="external_recordings" path="." />
+</paths>
