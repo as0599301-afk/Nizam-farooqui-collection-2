@@ -118,7 +118,7 @@ fun NfcTopBar(
 
                 Column {
                     Text(
-                        text = "Nizam Farooqui Collection",
+                        text = "Nizam Farooqui Collection 4",
                         color = TextPrimary,
                         fontWeight = FontWeight.Bold,
                         fontSize = 15.sp,

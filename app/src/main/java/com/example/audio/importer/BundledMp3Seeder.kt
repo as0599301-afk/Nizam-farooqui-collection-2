@@ -67,7 +67,7 @@ object BundledMp3Seeder {
                     repository.insertSong(
                         SongItem(
                             title = asset.title,
-                            artist = "Nizam Farooqui Collection",
+                            artist = "Nizam Farooqui Collection 4",
                             album = "Bundled Recordings",
                             durationMs = durationMs,
                             uriString = uri,

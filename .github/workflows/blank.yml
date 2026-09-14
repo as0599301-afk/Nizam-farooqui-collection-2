@@ -49,6 +49,6 @@ jobs:
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: Nizam-Farooqui-Collection-APK
+          name: Nizam-Farooqui-Collection-4-APK
           path: '**/build/outputs/apk/debug/*.apk'
           if-no-files-found: error

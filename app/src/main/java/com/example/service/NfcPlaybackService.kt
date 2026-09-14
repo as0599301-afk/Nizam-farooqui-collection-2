@@ -92,7 +92,7 @@ class NfcPlaybackService : Service() {
                 "NFC Media Playback",
                 NotificationManager.IMPORTANCE_LOW
             ).apply {
-                description = "Controls for background playback in Nizam Farooqui Collection"
+                description = "Controls for background playback in Nizam Farooqui Collection 4"
                 setShowBadge(false)
                 lockscreenVisibility = Notification.VISIBILITY_PUBLIC
             }
@@ -124,7 +124,7 @@ class NfcPlaybackService : Service() {
         val stopIntent = Intent(this, NfcPlaybackService::class.java).apply { action = ACTION_STOP }
         val stopPendingIntent = PendingIntent.getService(this, 4, stopIntent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
 
-        val title = song?.title ?: "NFC - Nizam Farooqui Collection"
+        val title = song?.title ?: "NFC - Nizam Farooqui Collection 4"
         val artist = song?.artist ?: "Ready for Playback"
 
         val playPauseIcon = if (isPlaying) android.R.drawable.ic_media_pause else android.R.drawable.ic_media_play

@@ -20,7 +20,7 @@ class ExampleRobolectricTest {
     fun `read string from context matches NFC app name`() {
         val context = ApplicationProvider.getApplicationContext<Context>()
         val appName = context.getString(R.string.app_name)
-        assertEquals("Nizam Farooqui Collection", appName)
+        assertEquals("Nizam Farooqui Collection 4", appName)
     }
 
     @Test
