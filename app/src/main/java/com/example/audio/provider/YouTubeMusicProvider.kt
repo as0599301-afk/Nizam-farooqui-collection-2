@@ -87,7 +87,9 @@ class YouTubeMusicProvider(
                             artist = item.snippet?.channelTitle ?: "YouTube",
                             uriString = "youtube:$videoId",
                             durationMs = 0L,
-                            album = "YouTube"
+                            album = "YouTube",
+                            artworkUrl = item.snippet?.thumbnails?.default?.url,
+                            isOnline = true
                         )
                     }
                 )
@@ -116,6 +118,17 @@ class YouTubeMusicProvider(
     @JsonClass(generateAdapter = true)
     data class YouTubeSnippet(
         val title: String? = null,
-        val channelTitle: String? = null
+        val channelTitle: String? = null,
+        val thumbnails: YouTubeThumbnails? = null
+    )
+
+    @JsonClass(generateAdapter = true)
+    data class YouTubeThumbnails(
+        val default: YouTubeThumbnail? = null
+    )
+
+    @JsonClass(generateAdapter = true)
+    data class YouTubeThumbnail(
+        val url: String? = null
     )
 }
