@@ -7,8 +7,6 @@ import android.media.AudioFormat
 import android.media.AudioRecord
 import android.media.AudioTrack
 import android.media.MediaRecorder
-import android.media.audiofx.AcousticEchoCanceler
-import android.media.audiofx.NoiseSuppressor
 import android.os.Process
 import com.example.audio.engine.AudioDuckingEngine
 import com.example.data.model.VoiceEffectType
@@ -35,8 +33,6 @@ class LiveMicEngine(
 
     private val isRunning = AtomicBoolean(false)
     private var audioThread: Thread? = null
-    private var echoCanceler: AcousticEchoCanceler? = null
-    private var noiseSuppressor: NoiseSuppressor? = null
 
     private val _isMicActive = MutableStateFlow(false)
     val isMicActive: StateFlow<Boolean> = _isMicActive.asStateFlow()
@@ -94,7 +90,7 @@ class LiveMicEngine(
         val audioRecord: AudioRecord
         try {
             audioRecord = AudioRecord(
-                MediaRecorder.AudioSource.VOICE_COMMUNICATION,
+                MediaRecorder.AudioSource.MIC,
                 SAMPLE_RATE,
                 CHANNEL_CONFIG_IN,
                 AUDIO_FORMAT,
@@ -140,31 +136,12 @@ class LiveMicEngine(
             return false
         }
 
-        // Hardware echo cancellation and noise suppression for open-speaker use.
-        // Keep these attached to the same AudioRecord session so Bluetooth routing
-        // and the existing voice effects/ducking pipeline remain unchanged.
-        try {
-            echoCanceler = AcousticEchoCanceler.create(audioRecord.audioSessionId)?.apply {
-                enabled = true
-            }
-        } catch (_: Exception) {
-            echoCanceler = null
-        }
-        try {
-            noiseSuppressor = NoiseSuppressor.create(audioRecord.audioSessionId)?.apply {
-                enabled = true
-            }
-        } catch (_: Exception) {
-            noiseSuppressor = null
-        }
-
         isRunning.set(true)
         _isMicActive.value = true
         _errorMessage.value = null
-        // Music ducks only when actual speech is detected.
-        speechDuckingActive = false
-        speechAboveCount = 0
-        speechBelowCount = 0
+
+        // Trigger real background music ducking
+        duckingEngine.onVoiceSourceStarted(VoiceSourceType.LIVE_MIC)
 
         audioThread = Thread {
             Process.setThreadPriority(Process.THREAD_PRIORITY_URGENT_AUDIO)
@@ -201,27 +178,6 @@ class LiveMicEngine(
                     val normalizedMeter = (rms * 4.0).coerceIn(0.0, 1.0).toFloat()
                     _audioMeterLevel.value = normalizedMeter
 
-                    // Speech-triggered ducking: Mic ON alone never ducks music.
-                    val speechThreshold = 0.08f
-
-                    if (normalizedMeter >= speechThreshold) {
-                        speechAboveCount++
-                        speechBelowCount = 0
-
-                        if (!speechDuckingActive && speechAboveCount >= 3) {
-                            speechDuckingActive = true
-                            duckingEngine.onVoiceSourceStarted(VoiceSourceType.LIVE_MIC)
-                        }
-                    } else {
-                        speechBelowCount++
-                        speechAboveCount = 0
-
-                        if (speechDuckingActive && speechBelowCount >= 12) {
-                            speechDuckingActive = false
-                            duckingEngine.onVoiceSourceStopped(VoiceSourceType.LIVE_MIC)
-                        }
-                    }
-
                     // 3. Process Live Voice Effect (EXACTLY 5 EFFECTS)
                     val currentVolMultiplier = (_micVolume.value / 100f)
                     val activeEffect = _currentEffect.value
@@ -240,10 +196,6 @@ class LiveMicEngine(
             } catch (e: Exception) {
                 e.printStackTrace()
             } finally {
-                try { echoCanceler?.release() } catch (_: Exception) {}
-                try { noiseSuppressor?.release() } catch (_: Exception) {}
-                echoCanceler = null
-                noiseSuppressor = null
                 try {
                     audioRecord.stop()
                     audioRecord.release()
@@ -370,14 +322,8 @@ class LiveMicEngine(
         _isMicActive.value = false
         _audioMeterLevel.value = 0f
 
-        // Release ducking only if speech had actually triggered it.
-        if (speechDuckingActive) {
-            speechDuckingActive = false
-            duckingEngine.onVoiceSourceStopped(VoiceSourceType.LIVE_MIC)
-        }
-
-        speechAboveCount = 0
-        speechBelowCount = 0
+        // Ducking engine release
+        duckingEngine.onVoiceSourceStopped(VoiceSourceType.LIVE_MIC)
 
         try {
             audioThread?.interrupt()
