@@ -330,40 +330,42 @@ class LiveMicEngine(
         volume: Float
     ) {
         val bufSize = pitchBuffer.size
-        val grainSize = pitchGrainSize
-        val halfGrain = grainSize / 2
+        if (bufSize < 4) {
+            for (i in 0 until count) {
+                outSamples[i] = (inSamples[i].toFloat() * volume)
+                    .coerceIn(-32768f, 32767f).toInt().toShort()
+            }
+            return
+        }
+
+        // Clear, stable child-like pitch shift with linear interpolation.
+        // Keep the pitch moderate to avoid the metallic/robotic sound caused
+        // by the previous dual-grain crossfade algorithm.
+        val ratio = 1.28f
 
         for (i in 0 until count) {
-            // Write incoming sample to circular buffer
             pitchBuffer[pitchWriteIndex] = inSamples[i].toFloat()
 
-            // Calculate dual read pointers with crossfade window
-            val r1 = pitchReadIndex1.toInt() % bufSize
-            val r2 = pitchReadIndex2.toInt() % bufSize
+            val readPos = pitchReadIndex1
+            val index0 = readPos.toInt().coerceIn(0, bufSize - 2)
+            val index1 = index0 + 1
+            val fraction = readPos - index0
 
-            val sample1 = pitchBuffer[r1]
-            val sample2 = pitchBuffer[r2]
+            val sample0 = pitchBuffer[index0]
+            val sample1 = pitchBuffer[index1]
+            val shifted = sample0 + (sample1 - sample0) * fraction
 
-            // Triangular crossfade window based on phase
-            val phase1 = (pitchReadIndex1 % grainSize) / grainSize
-            val window1 = if (phase1 < 0.5f) phase1 * 2f else (1f - phase1) * 2f
-
-            val phase2 = (pitchReadIndex2 % grainSize) / grainSize
-            val window2 = if (phase2 < 0.5f) phase2 * 2f else (1f - phase2) * 2f
-
-            val blended = (sample1 * window1 + sample2 * window2)
-
-            // Advance read pointers at faster rate (1.45x) for child-like higher pitch
-            pitchReadIndex1 += pitchRatio
-            if (pitchReadIndex1 >= bufSize) pitchReadIndex1 -= bufSize
-
-            pitchReadIndex2 += pitchRatio
-            if (pitchReadIndex2 >= bufSize) pitchReadIndex2 -= bufSize
+            pitchReadIndex1 += ratio
+            while (pitchReadIndex1 >= bufSize) {
+                pitchReadIndex1 -= bufSize
+            }
 
             pitchWriteIndex = (pitchWriteIndex + 1) % bufSize
 
-            val finalSample = (blended * volume).coerceIn(-32768f, 32767f)
-            outSamples[i] = finalSample.toInt().toShort()
+            outSamples[i] = (shifted * volume)
+                .coerceIn(-32768f, 32767f)
+                .toInt()
+                .toShort()
         }
     }
 
