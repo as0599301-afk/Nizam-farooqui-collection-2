@@ -37,6 +37,9 @@ class LiveMicEngine(
     private var audioThread: Thread? = null
     private var echoCanceler: AcousticEchoCanceler? = null
     private var noiseSuppressor: NoiseSuppressor? = null
+    private var speechDuckingActive = false
+    private var speechAboveCount = 0
+    private var speechBelowCount = 0
 
     private val _isMicActive = MutableStateFlow(false)
     val isMicActive: StateFlow<Boolean> = _isMicActive.asStateFlow()
