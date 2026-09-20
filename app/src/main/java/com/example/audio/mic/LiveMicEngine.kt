@@ -2,6 +2,7 @@ package com.example.audio.mic
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.media.AudioManager
 import android.media.AudioAttributes
 import android.media.AudioFormat
 import android.media.AudioRecord
@@ -26,6 +27,7 @@ class LiveMicEngine(
     private val context: Context,
     private val duckingEngine: AudioDuckingEngine
 ) {
+    private val audioManager = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
     companion object {
         const val SAMPLE_RATE = 44100
         const val CHANNEL_CONFIG_IN = AudioFormat.CHANNEL_IN_MONO
@@ -82,6 +84,7 @@ class LiveMicEngine(
     @SuppressLint("MissingPermission")
     fun startMic(): Boolean {
         if (isRunning.get()) return true
+        audioManager.mode = AudioManager.MODE_IN_COMMUNICATION
 
         val minRecBuf = AudioRecord.getMinBufferSize(SAMPLE_RATE, CHANNEL_CONFIG_IN, AUDIO_FORMAT)
         if (minRecBuf == AudioRecord.ERROR || minRecBuf == AudioRecord.ERROR_BAD_VALUE) {
@@ -387,6 +390,10 @@ class LiveMicEngine(
         try {
             audioThread?.interrupt()
             audioThread = null
+        } catch (_: Exception) {}
+
+        try {
+            audioManager.mode = AudioManager.MODE_NORMAL
         } catch (_: Exception) {}
     }
 

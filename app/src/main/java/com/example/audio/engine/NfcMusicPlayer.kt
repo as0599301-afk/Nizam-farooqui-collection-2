@@ -1,6 +1,8 @@
 package com.example.audio.engine
 
 import android.content.Context
+import android.os.Handler
+import android.os.Looper
 import android.net.Uri
 import androidx.media3.common.MediaItem
 import androidx.media3.common.MediaMetadata
@@ -24,6 +26,7 @@ class NfcMusicPlayer(
     private val duckingEngine: AudioDuckingEngine,
     private val scope: CoroutineScope = CoroutineScope(Dispatchers.Main)
 ) {
+    private val mainHandler = Handler(Looper.getMainLooper())
     private var _exoPlayer: ExoPlayer? = null
     val exoPlayer: ExoPlayer
         get() {
@@ -93,7 +96,13 @@ class NfcMusicPlayer(
     private fun initExoPlayer(): ExoPlayer {
         val player = ExoPlayer.Builder(context.applicationContext).build()
         duckingEngine.onVolumeChangedListener = { effectiveVolume ->
-            _exoPlayer?.volume = effectiveVolume
+            mainHandler.post {
+                _exoPlayer?.let { player ->
+                    if (player.playbackState != Player.STATE_IDLE) {
+                        player.volume = effectiveVolume.coerceIn(0f, 1f)
+                    }
+                }
+            }
         }
         player.volume = duckingEngine.effectiveMusicVolume.value
         player.addListener(playerListener)
@@ -103,7 +112,13 @@ class NfcMusicPlayer(
     init {
         // Wire up ducking engine volume callback
         duckingEngine.onVolumeChangedListener = { effectiveVolume ->
-            _exoPlayer?.volume = effectiveVolume
+            mainHandler.post {
+                _exoPlayer?.let { player ->
+                    if (player.playbackState != Player.STATE_IDLE) {
+                        player.volume = effectiveVolume.coerceIn(0f, 1f)
+                    }
+                }
+            }
         }
     }
 
