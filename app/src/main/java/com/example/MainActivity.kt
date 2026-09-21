@@ -146,7 +146,7 @@ fun NfcMainApp(
                         song = currentSong,
                         isPlaying = isPlaying,
                         isDucked = isDucked,
-                        duckingPercent = duckingSettings?.duckingLevelPercent ?: 30,
+                        duckingPercent = duckingSettings?.duckingLevelPercent ?: 10,
                         onTogglePlayPause = { viewModel.togglePlayPause() },
                         onNext = { viewModel.nextTrack() },
                         onClick = { viewModel.navigateTo(NfcScreen.MUSIC_PLAYER) }

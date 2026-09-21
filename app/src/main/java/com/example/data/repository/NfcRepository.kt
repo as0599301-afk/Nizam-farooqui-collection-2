@@ -82,7 +82,7 @@ class NfcRepository(
         return nfcDao.getDuckingSettingsSync() ?: DuckingSettings(
             id = 1,
             isDuckingEnabled = true,
-            duckingLevelPercent = 30,
+            duckingLevelPercent = 10,
             fadeDownSpeedMs = 300L,
             fadeUpSpeedMs = 600L,
             musicVolumePercent = 100,

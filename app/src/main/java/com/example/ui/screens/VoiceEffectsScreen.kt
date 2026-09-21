@@ -92,7 +92,7 @@ fun VoiceEffectsScreen(
         VoiceDuckingIndicator(
             isDucked = isDucked,
             activeSources = activeVoiceSources,
-            duckingPercent = duckingSettings?.duckingLevelPercent ?: 30,
+            duckingPercent = duckingSettings?.duckingLevelPercent ?: 10,
             onClick = {}
         )
 

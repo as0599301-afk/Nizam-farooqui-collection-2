@@ -125,7 +125,7 @@ class LiveMicEngine(
             audioTrack = AudioTrack.Builder()
                 .setAudioAttributes(
                     AudioAttributes.Builder()
-                        .setUsage(AudioAttributes.USAGE_MEDIA)
+                        .setUsage(AudioAttributes.USAGE_VOICE_COMMUNICATION)
                         .setContentType(AudioAttributes.CONTENT_TYPE_SPEECH)
                         .build()
                 )
@@ -232,9 +232,24 @@ class LiveMicEngine(
                     val currentVolMultiplier = (_micVolume.value / 100f)
                     val activeEffect = _currentEffect.value
 
+                    // Clean mic input: suppress low background noise and add modest voice gain.
+                    val cleanInput = ShortArray(readSamples)
+                    val noiseGate = 0.018f
+                    val voiceGain = 1.35f
+
+                    for (i in 0 until readSamples) {
+                        val sample = inBuffer[i].toFloat() / 32768f
+                        val cleaned = if (kotlin.math.abs(sample) < noiseGate) {
+                            0f
+                        } else {
+                            (sample * voiceGain).coerceIn(-1f, 1f)
+                        }
+                        cleanInput[i] = (cleaned * 32768f).toInt().toShort()
+                    }
+
                     processVoiceEffect(
                         effect = activeEffect,
-                        inSamples = inBuffer,
+                        inSamples = cleanInput,
                         outSamples = outBuffer,
                         count = readSamples,
                         volume = currentVolMultiplier

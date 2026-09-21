@@ -50,7 +50,7 @@ data class DuckingSettings(
     @PrimaryKey
     val id: Int = 1,
     val isDuckingEnabled: Boolean = true,
-    val duckingLevelPercent: Int = 30, // Background music drops to 30%
+    val duckingLevelPercent: Int = 10, // Background music drops to 30%
     val fadeDownSpeedMs: Long = 300L,
     val fadeUpSpeedMs: Long = 600L,
     val musicVolumePercent: Int = 100,

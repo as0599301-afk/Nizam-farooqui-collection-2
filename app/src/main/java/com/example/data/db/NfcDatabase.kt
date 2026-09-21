@@ -44,7 +44,7 @@ abstract class NfcDatabase : RoomDatabase() {
                         super.onCreate(db)
                         try {
                             db.execSQL(
-                                "INSERT OR IGNORE INTO ducking_settings (id, isDuckingEnabled, duckingLevelPercent, fadeDownSpeedMs, fadeUpSpeedMs, musicVolumePercent, voiceMicVolumePercent) VALUES (1, 1, 30, 300, 600, 100, 100)"
+                                "INSERT OR IGNORE INTO ducking_settings (id, isDuckingEnabled, duckingLevelPercent, fadeDownSpeedMs, fadeUpSpeedMs, musicVolumePercent, voiceMicVolumePercent) VALUES (1, 1, 10, 300, 600, 100, 100)"
                             )
                         } catch (e: Exception) {
                             e.printStackTrace()
