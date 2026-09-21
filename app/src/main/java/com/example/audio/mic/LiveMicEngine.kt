@@ -234,8 +234,8 @@ class LiveMicEngine(
 
                     // Clean mic input: suppress low background noise and add modest voice gain.
                     val cleanInput = ShortArray(readSamples)
-                    val noiseGate = 0.018f
-                    val voiceGain = 1.35f
+                    val noiseGate = 0.025f
+                    val voiceGain = 2.5f
 
                     for (i in 0 until readSamples) {
                         val sample = inBuffer[i].toFloat() / 32768f
